@@ -1,0 +1,177 @@
+PUT meteogeoloc12
+{
+  "mappings": {
+    "_doc": {
+      "properties": {
+        "base": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "clouds": {
+          "properties": {
+            "all": {
+              "type": "long"
+            }
+          }
+        },
+        "cod": {
+          "type": "long"
+        },
+        "coord": {
+          "type":"geo_point"
+        },
+        "dt": {
+          "type": "long"
+        },
+        "id": {
+          "type": "long"
+        },
+        "main": {
+          "properties": {
+            "grnd_level": {
+              "type": "float"
+            },
+            "humidity": {
+              "type": "long"
+            },
+            "pressure": {
+              "type": "long"
+            },
+            "sea_level": {
+              "type": "float"
+            },
+            "temp": {
+              "type": "long"
+            },
+            "temp_max": {
+              "type": "float"
+            },
+            "temp_min": {
+              "type": "float"
+            }
+          }
+        },
+        "name": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "rain": {
+          "properties": {
+            "3h": {
+              "type": "float"
+            }
+          }
+        },
+        "snow": {
+          "properties": {
+            "1h": {
+              "type": "float"
+            }
+          }
+        },
+        "sys": {
+          "properties": {
+            "country": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                }
+              }
+            },
+            "id": {
+              "type": "long"
+            },
+            "message": {
+              "type": "float"
+            },
+            "sunrise": {
+              "type": "long"
+            },
+            "sunset": {
+              "type": "long"
+            },
+            "type": {
+              "type": "long"
+            }
+          }
+        },
+        "visibility": {
+          "type": "long"
+        },
+        "weather": {
+          "properties": {
+            "description": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                }
+              }
+            },
+            "icon": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                }
+              }
+            },
+            "id": {
+              "type": "long"
+            },
+            "main": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                }
+              }
+            }
+          }
+        },
+        "wind": {
+          "properties": {
+            "deg": {
+              "type": "long"
+            },
+            "gust": {
+              "type": "float"
+            },
+            "speed": {
+              "type": "float"
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+POST _reindex
+{
+  "source": {
+    "index": "meteogeoloc10"
+  },
+  "dest": {
+    "index": "meteogeoloc12"
+  },
+  "script": {
+    "inline": "ctx._source.main.temp= ctx._source.main.temp  - 273",
+    "lang": "painless"
+  }
+}
